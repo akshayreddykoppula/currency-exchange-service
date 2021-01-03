@@ -1,5 +1,7 @@
 package com.akshay.rest.webservices.currency.exchange.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +20,13 @@ public class CurrencyExchangeController {
 	@Autowired
 	private CurrencyExchangeValueRepository repository;
 	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@GetMapping("/currency-exchange/from/{from}/to/{to}")
 	public CurrencyExchangeValue retrieveCurrencyExchangeValue(@PathVariable String from, @PathVariable String to) {
 		CurrencyExchangeValue currencyExchangeValue = repository.findByFromAndTo(from, to);
 		currencyExchangeValue.setPort(Integer.parseInt(environment.getProperty("server.port")));
+		logger.info("{}", currencyExchangeValue);
 		return currencyExchangeValue;
 	}
 }
